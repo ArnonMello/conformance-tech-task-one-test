@@ -2,16 +2,14 @@ package com.raidiam.api.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.Customizer;  
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import static org.springframework.security.oauth2.core.authorization.OAuth2AuthorizationManagers.hasScope;  
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.Customizer;
+import static org.springframework.security.oauth2.core.authorization.OAuth2AuthorizationManagers.hasScope;
+
 
 @Configuration
-@EnableWebSecurity
 public class SecurityConfig {
 
     @Bean
@@ -20,11 +18,11 @@ public class SecurityConfig {
             .sessionManagement(session -> 
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> 
-                auth.requestMatchers("/api/now").hasAuthority("SCOPE_time")
-                    .requestMatchers("/api/random").hasAuthority("SCOPE_random")
+                auth.requestMatchers("/api/now").access(hasScope("time"))
+                    .requestMatchers("/api/random").access(hasScope("random"))
                     .anyRequest().permitAll())
             .oauth2ResourceServer(oauth2 -> 
-                oauth2.opaqueToken());
+                oauth2.opaqueToken(Customizer.withDefaults()));
         
         return http.build();
     }
