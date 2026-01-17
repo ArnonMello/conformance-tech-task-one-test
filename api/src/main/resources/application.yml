@@ -1,0 +1,8 @@
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        opaquetoken:
+          introspection-uri: http://localhost:8081/token/introspect
+          client-id: dummy
+          client-secret: dummy
